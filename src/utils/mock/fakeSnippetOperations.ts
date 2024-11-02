@@ -13,7 +13,7 @@ const DELAY: number = 1000
 export class FakeSnippetOperations implements SnippetOperations {
   private readonly fakeStore = new FakeSnippetStore()
 
-  constructor() {
+  ;constructor() {
     autoBind(this)
   }
 

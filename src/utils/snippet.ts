@@ -15,6 +15,14 @@ export type CreateSnippet = {
   extension: string;
 }
 
+export type SnippetRequestCreate = {
+  title: string,
+  language: string,
+  description : string,
+  code: string,
+  version: string
+}
+
 export type CreateSnippetWithLang = CreateSnippet & { language: string }
 
 export type UpdateSnippet = {
