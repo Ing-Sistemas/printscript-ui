@@ -16,8 +16,28 @@ export class FantocheSnippetOperations implements SnippetOperations {
     listSnippetDescriptors(page: number, pageSize: number, sippetName?: string | undefined): Promise<PaginatedSnippets> {
         throw new Error("Method not implemented.");
     }
-    getSnippetById(id: string): Promise<Snippet | undefined> {
-        throw new Error("Method not implemented.");
+    async getSnippetById(id: string): Promise<Snippet | undefined> {
+        // TODO arreglar el return para q lo q se reciba sea acorde a lo q pide el Snippet type
+        try {
+            const url = `${BACKEND_URL}/get/${id}; //TODO reduce this to only /id `;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return {
+                id: res.data.id,
+                name: res.data.title,
+                content: res.data.code,
+                language: res.data.language,
+                extension: res.data.extension,
+                compliance : res.data.compliance,
+                author: res.data.author
+            }
+        } catch (e) {
+            console.log("Error getting snippet", e);
+            throw e;
+        }
     }
     updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
         throw new Error("Method not implemented.");
@@ -46,9 +66,6 @@ export class FantocheSnippetOperations implements SnippetOperations {
     removeTestCase(id: string): Promise<string> {
         throw new Error("Method not implemented.");
     }
-    deleteSnippet(id: string): Promise<string> {
-        throw new Error("Method not implemented.");
-    }
     testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
         throw new Error("Method not implemented.");
     }
@@ -61,10 +78,21 @@ export class FantocheSnippetOperations implements SnippetOperations {
     modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
         throw new Error("Method not implemented.");
     }
+    async deleteSnippet(id: string): Promise<string> {
+        try {
+            const url = `${BACKEND_URL}/delete/${id}`; //TODO add snippetId to s-s url
+            await axios.delete(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+            });
+            return "Snippet deleted successfully";
+        } catch (e) {
+            console.log("Error deleting snippet", e);
+            throw e;
+        }
+    }
     async createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
-        // adapt CreateSnippet to SnippetRequestCreate
-        // get the create endpoint url (base from .env and + /create)
-        // usar axios para pegarle al endpoint con ladata y pasarle x headers el token
         try {
             const url = `${BACKEND_URL}/create`;
             const data = transformSnippet(createSnippet);
