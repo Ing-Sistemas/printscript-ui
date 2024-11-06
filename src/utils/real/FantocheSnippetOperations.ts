@@ -13,9 +13,6 @@ export class FantocheSnippetOperations implements SnippetOperations {
 
     private token = localStorage.getItem("token");
 
-    listSnippetDescriptors(page: number, pageSize: number, sippetName?: string | undefined): Promise<PaginatedSnippets> {
-        throw new Error("Method not implemented.");
-    }
     async getSnippetById(id: string): Promise<Snippet | undefined> {
         // TODO arreglar el return para q lo q se reciba sea acorde a lo q pide el Snippet type
         try {
@@ -39,8 +36,20 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
-    updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
-        throw new Error("Method not implemented.");
+    async updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
+        // TODO que el res de los mismos datos (respentado nombre) q el type Snippet
+        try {
+            const url = `${BACKEND_URL}/update/${id}`;
+            const res = await axios.put(url, updateSnippet, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error updating snippet", e);
+            throw e;
+        }
     }
     getUserFriends(name?: string | undefined, page?: number | undefined, pageSize?: number | undefined): Promise<PaginatedUsers> {
         throw new Error("Method not implemented.");
@@ -51,8 +60,19 @@ export class FantocheSnippetOperations implements SnippetOperations {
     getFormatRules(): Promise<Rule[]> {
         throw new Error("Method not implemented.");
     }
-    getLintingRules(): Promise<Rule[]> {
-        throw new Error("Method not implemented.");
+    async getLintingRules(): Promise<Rule[]> {
+        try {
+            const url = `${BACKEND_URL}/lint/rules`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error getting linting rules", e);
+            throw e;
+        }
     }
     getTestCases(snippetId: string): Promise<TestCase[]> {
         throw new Error("Method not implemented.");
@@ -78,6 +98,10 @@ export class FantocheSnippetOperations implements SnippetOperations {
     modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
         throw new Error("Method not implemented.");
     }
+    listSnippetDescriptors(page: number, pageSize: number, sippetName?: string | undefined): Promise<PaginatedSnippets> {
+        throw new Error("Method not implemented.");
+    }
+
     async deleteSnippet(id: string): Promise<string> {
         try {
             const url = `${BACKEND_URL}/delete/${id}`; //TODO add snippetId to s-s url
@@ -92,6 +116,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
+
     async createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
         try {
             const url = `${BACKEND_URL}/create`;
