@@ -44,7 +44,8 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
     }
 
-    async getSnippetById(id: string): Promise<Snippet | undefined> {
+    async getSnippetById(id: string): Promise<Snippet | undefined>
+    {
         try {
             const url = `${BACKEND_URL}/get/${id}`;
             const res = await axios.get(url, {
@@ -60,7 +61,6 @@ export class FantocheSnippetOperations implements SnippetOperations {
     }
 
     async updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
-        // TODO que el res de los mismos datos (respentado nombre) q el type Snippet
         try {
             const url = `${BACKEND_URL}/update/${id}`;
             const res = await axios.put(url, updateSnippet, {
