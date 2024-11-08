@@ -45,28 +45,20 @@ export class FantocheSnippetOperations implements SnippetOperations {
     }
 
     async getSnippetById(id: string): Promise<Snippet | undefined> {
-        // TODO arreglar el return para q lo q se reciba sea acorde a lo q pide el Snippet type
         try {
-            const url = `${BACKEND_URL}/get/${id}; //TODO reduce this to only /id `;
+            const url = `${BACKEND_URL}/get/${id}`;
             const res = await axios.get(url, {
                 headers: {
                     'Authorization': `Bearer ${this.token}`,
                 }
             });
-            return {
-                id: res.data.id,
-                name: res.data.title,
-                content: res.data.code,
-                language: res.data.language,
-                extension: res.data.extension,
-                compliance : res.data.compliance,
-                author: res.data.author
-            }
+            return res.data
         } catch (e) {
             console.log("Error getting snippet", e);
             throw e;
         }
     }
+
     async updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
         // TODO que el res de los mismos datos (respentado nombre) q el type Snippet
         try {
