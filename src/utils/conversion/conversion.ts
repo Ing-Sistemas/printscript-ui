@@ -6,6 +6,6 @@ export const transformSnippet = (createSnippet: CreateSnippet): SnippetRequestCr
         language: createSnippet.language,
         description: createSnippet.extension,
         code: createSnippet.content,
-        version: "1.0" // TODO raro pq createSnippet no tiene version
+        version: "1.1" // TODO raro pq createSnippet no tiene version
     };
 }
