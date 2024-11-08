@@ -74,8 +74,24 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
-    shareSnippet(snippetId: string, userId: string): Promise<Snippet> {
-        throw new Error("Method not implemented.");
+
+    async shareSnippet(snippetId: string, userId: string): Promise<Snippet> {
+        try {
+            const url = `${BACKEND_URL}/share`;
+            const data = {
+                snippetId: snippetId,
+                userId: userId,
+            };
+            const res = await axios.post(url, data, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error sharing snippet", e);
+            throw e;
+        }
     }
     listSnippetDescriptors(page: number, pageSize: number, sippetName?: string | undefined): Promise<PaginatedSnippets> {
         throw new Error("Method not implemented.");
