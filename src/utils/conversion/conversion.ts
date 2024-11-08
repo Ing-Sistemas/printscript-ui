@@ -4,7 +4,7 @@ export const transformSnippet = (createSnippet: CreateSnippet): SnippetRequestCr
     return {
         title: createSnippet.name,
         language: createSnippet.language,
-        description: createSnippet.extension,
+        extension: createSnippet.extension,
         code: createSnippet.content,
         version: "1.1" // TODO raro pq createSnippet no tiene version
     };

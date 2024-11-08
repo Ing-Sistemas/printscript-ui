@@ -18,7 +18,7 @@ export type CreateSnippet = {
 export type SnippetRequestCreate = {
   title: string,
   language: string,
-  description : string,
+  extension : string,
   code: string,
   version: string
 }
