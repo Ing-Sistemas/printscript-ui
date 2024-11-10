@@ -118,8 +118,19 @@ export class FantocheSnippetOperations implements SnippetOperations {
     }
 
     // ------------------- FORMAT CASES -------------------
-    getFormatRules(): Promise<Rule[]> {
-        throw new Error("Method not implemented.");
+    async getFormatRules(): Promise<Rule[]> {
+        try {
+            const url = `${BACKEND_URL}/format/rules`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error getting format rules", e);
+            throw e;
+        }
     }
     modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
         throw new Error("Method not implemented.");
