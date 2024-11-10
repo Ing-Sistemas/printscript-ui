@@ -44,8 +44,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
     }
 
-    async getSnippetById(id: string): Promise<Snippet | undefined>
-    {
+    async getSnippetById(id: string): Promise<Snippet | undefined> {
         try {
             const url = `${BACKEND_URL}/get/${id}`;
             const res = await axios.get(url, {
