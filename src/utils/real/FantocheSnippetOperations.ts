@@ -114,7 +114,12 @@ export class FantocheSnippetOperations implements SnippetOperations {
         throw new Error("Method not implemented.");
     }
     getFileTypes(): Promise<FileType[]> {
-        throw new Error("Method not implemented.");
+        const fileTypes: FileType[] = [
+            { language: "PrintScript", extension: "ps" },
+            { language: "Python", extension: "py" },
+            { language: "Kotlin", extension: "kt" },
+        ]
+        return Promise.resolve(fileTypes);
     }
 
     // ------------------- FORMAT CASES -------------------
