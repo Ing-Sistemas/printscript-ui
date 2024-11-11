@@ -1,0 +1,47 @@
+name: "Continuous Deployment"
+
+on:
+    push:
+        branches:
+        - main
+        - dev
+jobs:
+  push_to_registry:
+    name: Push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to github packages for prod
+        id: docker_build
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v4
+        with:
+            context: .
+            push: true
+            tags: |
+              ghcr.io/ing-sistemas/ui:latest
+
+      - name: Push to github packages for dev
+        id: docker_build_dev
+        if: github.ref == 'refs/heads/dev'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/ing-sistemas/ui:dev
