@@ -97,38 +97,61 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
     }
     async listSnippetDescriptors(page: number, pageSize: number, snippetName?: string | undefined): Promise<PaginatedSnippets> {
-        const url = `${BACKEND_URL}/get_all`;
-        const res = await axios.get(url, {
-            headers: {
-                'Authorization': `Bearer ${await this.token}`,
-            },
-            params: {
-                snippetName,
-                page,
-                pageSize
-            }
-        })
-        return res.data;
+        try {
+            const url = `${BACKEND_URL}/get_all`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${await this.token}`,
+                },
+                params: {
+                    snippetName,
+                    page,
+                    pageSize
+                }
+            })
+            return res.data;
+        } catch (e) {
+            console.log("Error listing snippets", e);
+            throw e;
+        }
     }
 
     async getUserFriends(name?: string | undefined, page?: number | undefined, pageSize?: number | undefined): Promise<PaginatedUsers> {
-       const url = `${BACKEND_URL}/get_users`;
-       const res = await axios.get(url, {
-           headers: {
-               'Authorization': `Bearer ${await this.token}`,
-           },
-           params: {
-                name,
-                page,
-                pageSize,
-           }
-       });
-       return res.data;
+         try {
+            const url = `${BACKEND_URL}/get_users`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${await this.token}`,
+                },
+                params: {
+                    name,
+                    page,
+                    pageSize,
+                }
+            });
+            return res.data;
+        } catch (e) {
+             console.log("Error getting user friends", e);
+             throw e;
+         }
     }
 
     // ------------------- TEST CASES -------------------
-    getTestCases(snippetId: string): Promise<TestCase[]> {
-        throw new Error("Method not implemented.");
+    async getTestCases(snippetId: string): Promise<TestCase[]> {
+        try {
+            const url = `${BACKEND_URL}/test/${snippetId}`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+
+            return Promise.resolve(res.data);
+        } catch (e) {
+            console.log("Error getting test cases", e);
+            throw e;
+        }
+
     }
     postTestCase(testCase: Partial<TestCase>): Promise<TestCase> {
         throw new Error("Method not implemented.");
