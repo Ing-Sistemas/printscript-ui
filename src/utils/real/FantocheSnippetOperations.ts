@@ -11,7 +11,11 @@ import {transformSnippet} from "../conversion/conversion.ts";
 
 export class FantocheSnippetOperations implements SnippetOperations {
 
-    private token = localStorage.getItem("token");
+    token: Promise<string>
+
+    constructor(tokenString: Promise<string>) {
+        this.token = tokenString;
+    }
 
     async createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
         try {
@@ -19,7 +23,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const data = transformSnippet(createSnippet);
             const res = await axios.post(url, data, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
             });
             return res.data.snippetEntity; // TODO ver si esto esta bien
@@ -34,7 +38,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/delete/${id}`;
             await axios.delete(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
             });
             return "Snippet deleted successfully";
@@ -49,7 +53,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/get/${id}`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data
@@ -64,7 +68,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/update/${id}`;
             const res = await axios.put(url, updateSnippet, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data;
@@ -83,7 +87,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             };
             const res = await axios.post(url, data, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
             });
             return res.data;
@@ -92,12 +96,34 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
-    listSnippetDescriptors(page: number, pageSize: number, sippetName?: string | undefined): Promise<PaginatedSnippets> {
-        throw new Error("Method not implemented.");
+    async listSnippetDescriptors(page: number, pageSize: number, snippetName?: string | undefined): Promise<PaginatedSnippets> {
+        const url = `${BACKEND_URL}/get_all`;
+        const res = await axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${await this.token}`,
+            },
+            params: {
+                snippetName,
+                page,
+                pageSize
+            }
+        })
+        return res.data;
     }
 
-    getUserFriends(name?: string | undefined, page?: number | undefined, pageSize?: number | undefined): Promise<PaginatedUsers> {
-        throw new Error("Method not implemented.");
+    async getUserFriends(name?: string | undefined, page?: number | undefined, pageSize?: number | undefined): Promise<PaginatedUsers> {
+       const url = `${BACKEND_URL}/get_users`;
+       const res = await axios.get(url, {
+           headers: {
+               'Authorization': `Bearer ${await this.token}`,
+           },
+           params: {
+                name,
+                page,
+                pageSize,
+           }
+       });
+       return res.data;
     }
 
     // ------------------- TEST CASES -------------------
@@ -128,7 +154,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/format/rules`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data;
@@ -153,7 +179,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/lint/rules`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data;
