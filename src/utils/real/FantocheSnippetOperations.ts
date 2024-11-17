@@ -153,14 +153,51 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
 
     }
-    postTestCase(testCase: Partial<TestCase>): Promise<TestCase> {
-        throw new Error("Method not implemented.");
+    async postTestCase(testCase: Partial<TestCase>): Promise<TestCase> {
+        try {
+            const url = `${BACKEND_URL}/test`;
+            const res = await axios.post(url, testCase, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error posting test case", e);
+            throw e;
+        }
     }
-    removeTestCase(id: string): Promise<string> {
-        throw new Error("Method not implemented.");
+
+    async removeTestCase(id: string): Promise<string> {
+        try {
+            const url = `${BACKEND_URL}/test/${id}`;
+            await axios.delete(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return "Test case removed successfully";
+        } catch (e) {
+            console.log("Error removing test case", e);
+            throw e;
+        }
     }
-    testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
-        throw new Error("Method not implemented.");
+    async testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
+        try {
+            const url = `${BACKEND_URL}/test`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+                params: {
+                    testCase
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error testing snippet", e);
+            throw e;
+        }
     }
     getFileTypes(): Promise<FileType[]> {
         const fileTypes: FileType[] = [
@@ -189,8 +226,22 @@ export class FantocheSnippetOperations implements SnippetOperations {
     modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
         throw new Error("Method not implemented.");
     }
-    formatSnippet(snippet: string): Promise<string> {
-        throw new Error("Method not implemented.");
+    async formatSnippet(snippet: string): Promise<string> {
+        try {
+            const url = `${BACKEND_URL}/format/`;
+            await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+                params: {
+                    snippet
+                }
+            });
+            return "Snippet formatted successfully";
+        } catch (e) {
+            console.log("Error formatting snippet", e);
+            throw e;
+        }
     }
 
     // ------------------- LINT CASES -------------------
