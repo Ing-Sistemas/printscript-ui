@@ -223,8 +223,22 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
-    modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
-        throw new Error("Method not implemented.");
+    async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
+        try {
+            const url = `${BACKEND_URL}/format/`;
+            const res = await axios.post(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+                params: {
+                    newRules
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error modifying formatting rule", e);
+            throw e;
+        }
     }
     async formatSnippet(snippet: string): Promise<string> {
         try {
@@ -245,8 +259,22 @@ export class FantocheSnippetOperations implements SnippetOperations {
     }
 
     // ------------------- LINT CASES -------------------
-    modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
-        throw new Error("Method not implemented.");
+    async modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
+        try {
+            const url = `${BACKEND_URL}/lint/`;
+            const res = await axios.post(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+                params: {
+                    newRules
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error modifying linting rule", e);
+            throw e;
+        }
     }
     async getLintingRules(): Promise<Rule[]> {
         try {
