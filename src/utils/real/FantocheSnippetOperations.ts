@@ -224,21 +224,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
     }
     async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
-        try {
-            const url = `${BACKEND_URL}/format/`;
-            const res = await axios.post(url, {
-                headers: {
-                    'Authorization': `Bearer ${this.token}`,
-                },
-                params: {
-                    newRules
-                }
-            });
-            return res.data;
-        } catch (e) {
-            console.log("Error modifying formatting rule", e);
-            throw e;
-        }
+        return this.modifyRule(newRules, 'format');
     }
     async formatSnippet(snippet: string): Promise<string> {
         try {
@@ -260,21 +246,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
 
     // ------------------- LINT CASES -------------------
     async modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
-        try {
-            const url = `${BACKEND_URL}/lint/`;
-            const res = await axios.post(url, {
-                headers: {
-                    'Authorization': `Bearer ${this.token}`,
-                },
-                params: {
-                    newRules
-                }
-            });
-            return res.data;
-        } catch (e) {
-            console.log("Error modifying linting rule", e);
-            throw e;
-        }
+        return this.modifyRule(newRules, 'lint');
     }
     async getLintingRules(): Promise<Rule[]> {
         try {
@@ -287,6 +259,24 @@ export class FantocheSnippetOperations implements SnippetOperations {
             return res.data;
         } catch (e) {
             console.log("Error getting linting rules", e);
+            throw e;
+        }
+    }
+
+    private async modifyRule(newRules: Rule[], type: 'format' | 'lint'): Promise<Rule[]> {
+        try {
+            const url = `${BACKEND_URL}/${type}/`;
+            const res = await axios.post(url, {
+                headers: {
+                    'Authorization': `Bearer ${await this.token}`,
+                },
+                params: {
+                    newRules
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log(`Error modifying ${type} rule`, e);
             throw e;
         }
     }
