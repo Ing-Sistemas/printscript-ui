@@ -11,7 +11,11 @@ import {transformSnippet} from "../conversion/conversion.ts";
 
 export class FantocheSnippetOperations implements SnippetOperations {
 
-    private token = localStorage.getItem("token");
+    token: Promise<string>
+
+    constructor(tokenString: Promise<string>) {
+        this.token = tokenString;
+    }
 
     async createSnippet(createSnippet: CreateSnippet): Promise<Snippet> {
         try {
@@ -19,7 +23,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const data = transformSnippet(createSnippet);
             const res = await axios.post(url, data, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
             });
             return res.data.snippetEntity; // TODO ver si esto esta bien
@@ -34,7 +38,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/delete/${id}`;
             await axios.delete(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
             });
             return "Snippet deleted successfully";
@@ -49,7 +53,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/get/${id}`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data
@@ -64,7 +68,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/update/${id}`;
             const res = await axios.put(url, updateSnippet, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data;
@@ -83,7 +87,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             };
             const res = await axios.post(url, data, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
             });
             return res.data;
@@ -92,26 +96,108 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
-    listSnippetDescriptors(page: number, pageSize: number, sippetName?: string | undefined): Promise<PaginatedSnippets> {
-        throw new Error("Method not implemented.");
+    async listSnippetDescriptors(page: number, pageSize: number, snippetName?: string | undefined): Promise<PaginatedSnippets> {
+        try {
+            const url = `${BACKEND_URL}/get_all`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${await this.token}`,
+                },
+                params: {
+                    snippetName,
+                    page,
+                    pageSize
+                }
+            })
+            return res.data;
+        } catch (e) {
+            console.log("Error listing snippets", e);
+            throw e;
+        }
     }
 
-    getUserFriends(name?: string | undefined, page?: number | undefined, pageSize?: number | undefined): Promise<PaginatedUsers> {
-        throw new Error("Method not implemented.");
+    async getUserFriends(name?: string | undefined, page?: number | undefined, pageSize?: number | undefined): Promise<PaginatedUsers> {
+         try {
+            const url = `${BACKEND_URL}/get_users`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${await this.token}`,
+                },
+                params: {
+                    name,
+                    page,
+                    pageSize,
+                }
+            });
+            return res.data;
+        } catch (e) {
+             console.log("Error getting user friends", e);
+             throw e;
+         }
     }
 
     // ------------------- TEST CASES -------------------
-    getTestCases(snippetId: string): Promise<TestCase[]> {
-        throw new Error("Method not implemented.");
+    async getTestCases(snippetId: string): Promise<TestCase[]> {
+        try {
+            const url = `${BACKEND_URL}/test/${snippetId}`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+
+            return Promise.resolve(res.data);
+        } catch (e) {
+            console.log("Error getting test cases", e);
+            throw e;
+        }
+
     }
-    postTestCase(testCase: Partial<TestCase>): Promise<TestCase> {
-        throw new Error("Method not implemented.");
+    async postTestCase(testCase: Partial<TestCase>): Promise<TestCase> {
+        try {
+            const url = `${BACKEND_URL}/test`;
+            const res = await axios.post(url, testCase, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error posting test case", e);
+            throw e;
+        }
     }
-    removeTestCase(id: string): Promise<string> {
-        throw new Error("Method not implemented.");
+
+    async removeTestCase(id: string): Promise<string> {
+        try {
+            const url = `${BACKEND_URL}/test/${id}`;
+            await axios.delete(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                }
+            });
+            return "Test case removed successfully";
+        } catch (e) {
+            console.log("Error removing test case", e);
+            throw e;
+        }
     }
-    testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
-        throw new Error("Method not implemented.");
+    async testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult> {
+        try {
+            const url = `${BACKEND_URL}/test`;
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+                params: {
+                    testCase
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log("Error testing snippet", e);
+            throw e;
+        }
     }
     getFileTypes(): Promise<FileType[]> {
         const fileTypes: FileType[] = [
@@ -128,7 +214,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/format/rules`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data;
@@ -137,28 +223,60 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
-    modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
-        throw new Error("Method not implemented.");
+    async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
+        return this.modifyRule(newRules, 'format');
     }
-    formatSnippet(snippet: string): Promise<string> {
-        throw new Error("Method not implemented.");
+    async formatSnippet(snippet: string): Promise<string> {
+        try {
+            const url = `${BACKEND_URL}/format/`;
+            await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                },
+                params: {
+                    snippet
+                }
+            });
+            return "Snippet formatted successfully";
+        } catch (e) {
+            console.log("Error formatting snippet", e);
+            throw e;
+        }
     }
 
     // ------------------- LINT CASES -------------------
-    modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
-        throw new Error("Method not implemented.");
+    async modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
+        return this.modifyRule(newRules, 'lint');
     }
     async getLintingRules(): Promise<Rule[]> {
         try {
             const url = `${BACKEND_URL}/lint/rules`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return res.data;
         } catch (e) {
             console.log("Error getting linting rules", e);
+            throw e;
+        }
+    }
+
+    private async modifyRule(newRules: Rule[], type: 'format' | 'lint'): Promise<Rule[]> {
+        try {
+            const url = `${BACKEND_URL}/${type}/`;
+            const res = await axios.post(url, {
+                headers: {
+                    'Authorization': `Bearer ${await this.token}`,
+                },
+                params: {
+                    newRules
+                }
+            });
+            return res.data;
+        } catch (e) {
+            console.log(`Error modifying ${type} rule`, e);
             throw e;
         }
     }
