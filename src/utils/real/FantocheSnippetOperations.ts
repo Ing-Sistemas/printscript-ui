@@ -223,9 +223,11 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
+
     async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
         return this.modifyRule(newRules, 'format');
     }
+
     async formatSnippet(snippet: string): Promise<string> {
         try {
             const url = `${BACKEND_URL}/format/`;
