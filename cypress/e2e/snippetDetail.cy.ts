@@ -1,4 +1,4 @@
-const BACKEND_URL = Cypress.env('BACKEND_URL').replace(':80', '')
+const BACKEND_URL = Cypress.env('BACKEND_URL')
 describe('Add snippet tests', () => {
 
   beforeEach(() => {
@@ -30,7 +30,6 @@ describe('Add snippet tests', () => {
     cy.get('.css-gdh49b-MuiAutocomplete-listbox .MuiAutocomplete-option').first().click();
     cy.get('.css-1yuhvjn > .MuiBox-root > .MuiButton-contained').click();
   })
-
 
   it('Can format snippets', function() {
     cy.get('[data-testid="ReadMoreIcon"] > path').click();
