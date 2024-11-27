@@ -15,11 +15,11 @@ describe('Add snippet tests', () => {
   it('Can add snippets manually', () => {
     cy.visit("/")
     const backendUrl = Cypress.env("BACKEND_URL")
-    const url = backendUrl.replace(':80', "") + "/snippet"
+    const url = backendUrl + "/create"
     cy.intercept('POST', url, (req) => {
       req.reply((res) => {
         req.headers = {'Authorization': `Bearer ${localStorage.getItem("authAccessToken")}`}
-        expect(res.statusCode).to.eq(201);
+        expect(res.statusCode).to.eq(200);
       });
     }).as('postRequest');
 
@@ -30,26 +30,26 @@ describe('Add snippet tests', () => {
     cy.get('#name').type('Some snippet name');
     cy.get('#demo-simple-select').click()
     cy.get('body').click();
-    cy.get('[data-testid="menu-option-Printscript"]').click()
+    cy.get('[data-testid="menu-option-PrintScript"]').click()
 
     cy.get('[data-testid="add-snippet-code-editor"]').click();
     cy.get('[data-testid="add-snippet-code-editor"]').type(`const snippet: string = "some snippet"; \n println(snippet);`);
     cy.get('[data-testid="SaveIcon"]').click();
-    cy.wait('@postRequest').its('response.statusCode').should('eq', 201); // Should create snippet
+    cy.wait('@postRequest').its('response.statusCode').should('eq', 200); // Should create snippet
   })
 
   it('Can add snippets via file', () => {
     cy.visit("/")
-    cy.intercept('POST', Cypress.env("BACKEND_URL").replace(':80','')+"/snippet", (req) => {
+    cy.intercept('POST', Cypress.env("BACKEND_URL") + "/create", (req) => {
       req.headers = {'Authorization': `Bearer ${localStorage.getItem('authAccessToken')}`}
       req.reply((res) => {
-        expect(res.statusCode).to.eq(201);
+        expect(res.statusCode).to.eq(200);
       });
     }).as('postRequest');
 
 
     /* ==== Generated with Cypress Studio ==== */
-    const backendUrl = Cypress.env("BACKEND_URL").replace(':80', "")
+    const backendUrl = Cypress.env("BACKEND_URL") + "/create"
     // Wait for snippets to load
     const url = backendUrl + "/user/snippets?isOwner=true&isShared=false?name=?pageNumber=0?pageSize=10"
 
