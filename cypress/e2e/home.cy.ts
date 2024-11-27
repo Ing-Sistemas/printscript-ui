@@ -32,13 +32,13 @@ describe('Home', () => {
     const snippetData: CreateSnippet = {
       name: "Test name",
       content: "println(1);",
-      language: "Printscript",
+      language: "PrintScript",
       extension: ".ps"
     }
 
 
-    const backendUrl = Cypress.env("BACKEND_URL").replace(':80', "")
-    const postUrl = backendUrl + "/snippet"
+    const backendUrl = Cypress.env("BACKEND_URL")
+    const postUrl = backendUrl + "/create"
     // Wait for snippets to load
     const url = backendUrl + "/user/snippets?isOwner=true&isShared=false?name=?pageNumber=0?pageSize=10"
 
@@ -53,7 +53,7 @@ describe('Home', () => {
 
     cy.intercept('POST', postUrl, (req) => {
       req.reply((res) => {
-        expect(res.statusCode).to.eq(201);
+        expect(res.statusCode).to.eq(200);
       });
     }).as('postRequest');
 
@@ -70,7 +70,7 @@ describe('Home', () => {
     cy.get('[data-testid="add-snippet-code-editor"]').type(snippetData.content);
     cy.get('[data-testid="SaveIcon"]').click();
 
-    cy.wait('@postRequest').its('response.statusCode').should('eq', 201);
+    cy.wait('@postRequest').its('response.statusCode').should('eq', 200);
     cy.wait(8000)
 
     cy.get('.MuiBox-root > .MuiInputBase-root > .MuiInputBase-input').clear()

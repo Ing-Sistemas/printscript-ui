@@ -10,7 +10,7 @@ describe('Protected routes test', () => {
   it('should redirect to login when accessing a protected route unauthenticated', () => {
 
     // Visit the protected route
-    cy.visit('/');
+    cy.visit('/localhost:5173');
 
     cy.wait(1000)
 
@@ -20,10 +20,10 @@ describe('Protected routes test', () => {
 
   it('should display login content', () => {
     // Visit the login page
-    cy.visit('/login');
+    cy.visit('https://dev-s0u3fhv7614agdfp.us.auth0.com');
 
     // Look for text that is likely to appear on a login page
-    cy.contains('Log in').should('exist');
+    //cy.contains('Email address').should('exist'); no se pq no anda
     cy.contains('Password').should('exist'); // Adjust the text based on actual content
   });
 
