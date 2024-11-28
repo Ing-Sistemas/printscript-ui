@@ -159,14 +159,15 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
 
     }
-    async postTestCase(testCase: Partial<TestCase>): Promise<TestCase> {
+    async postTestCase(testCase: Partial<TestCase>, sId: string): Promise<TestCase> {
         try {
             const token = localStorage.getItem('token');
             const url = `${BACKEND_URL}/test`;
             const res = await axios.post(url, testCase, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                }
+                },
+                params: { sId }
             });
             return res.data;
         } catch (e) {
@@ -238,7 +239,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
         return this.modifyRule(newRules, 'format');
     }
 
-    async formatSnippet(snippet: string): Promise<string> {
+    async formatSnippet(snippet: string): Promise<string> { // TODO es el code del snippet
         try {
             const token = localStorage.getItem('token');
             const url = `${BACKEND_URL}/format/`;
