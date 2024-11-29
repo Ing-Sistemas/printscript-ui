@@ -1,3 +1,5 @@
+import * as url from "node:url";
+
 const BACKEND_URL = Cypress.env('BACKEND_URL')
 describe('Add snippet tests', () => {
 
@@ -10,8 +12,9 @@ describe('Add snippet tests', () => {
         Cypress.env("AUTH0_USERNAME"),
         Cypress.env("AUTH0_PASSWORD")
     )
-
-    cy.intercept('GET', BACKEND_URL+"/user/snippets?isOwner=true&isShared=false?name=?pageNumber=0?pageSize=10")
+    const fullURL = BACKEND_URL + "/get_all?page=0&pageSize=10&snippetName="
+    console.log(fullURL)
+    cy.intercept('GET', fullURL)
         .as("getSnippets")
 
     cy.visit("/")

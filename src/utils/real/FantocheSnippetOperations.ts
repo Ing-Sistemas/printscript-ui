@@ -107,9 +107,9 @@ export class FantocheSnippetOperations implements SnippetOperations {
             });
 
             const data = res.data;
-
+            console.log(res.data.snippets[0])
             return {
-                snippets: data.snippets,
+                snippets: data.snippets, //hacer el map
                 page: data.pagination.page,
                 page_size: data.pagination.pageSize,
                 count: data.pagination.count

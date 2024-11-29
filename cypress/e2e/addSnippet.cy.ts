@@ -51,7 +51,7 @@ describe('Add snippet tests', () => {
     /* ==== Generated with Cypress Studio ==== */
     const backendUrl = Cypress.env("BACKEND_URL")
     // Wait for snippets to load
-    const url = backendUrl + "/user/snippets?isOwner=true&isShared=false?name=?pageNumber=0?pageSize=10"
+    const url = backendUrl + "/get_all?page=0&pageSize=10&snippetName="
 
 
     cy.intercept('GET', url, (req) => {
@@ -67,6 +67,6 @@ describe('Add snippet tests', () => {
 
     cy.get('[data-testid="SaveIcon"]').click();
 
-    cy.wait('@postRequest').its('response.statusCode').should('eq', 201);
+    cy.wait('@postRequest').its('response.statusCode').should('eq', 200);
   })
 })
