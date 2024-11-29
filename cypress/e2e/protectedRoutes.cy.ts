@@ -20,7 +20,6 @@ describe('Protected routes test', () => {
   it('should display login content', () => {
     // Visit the login page
     cy.visit('/login');
-
     // Look for text that is likely to appear on a login page
     cy.contains('Email address').should('exist');
     cy.contains('Password').should('exist'); // Adjust the text based on actual content

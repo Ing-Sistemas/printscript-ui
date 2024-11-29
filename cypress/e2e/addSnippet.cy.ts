@@ -49,7 +49,7 @@ describe('Add snippet tests', () => {
 
 
     /* ==== Generated with Cypress Studio ==== */
-    const backendUrl = Cypress.env("BACKEND_URL") + "/create"
+    const backendUrl = Cypress.env("BACKEND_URL")
     // Wait for snippets to load
     const url = backendUrl + "/user/snippets?isOwner=true&isShared=false?name=?pageNumber=0?pageSize=10"
 
