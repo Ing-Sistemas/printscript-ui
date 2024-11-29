@@ -153,12 +153,16 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
 
     }
-    async postTestCase(testCase: Partial<TestCase>): Promise<TestCase> {
+    async postTestCase(testCase: Partial<TestCase>, snippetId: string): Promise<TestCase> {
         try {
             const url = `${BACKEND_URL}/test`;
-            const res = await axios.post(url, testCase, {
+            const res = await axios.post(url, {
                 headers: {
                     'Authorization': `Bearer ${this.token}`,
+                },
+                params: {
+                    testCase,
+                    snippetId
                 }
             });
             return res.data;
