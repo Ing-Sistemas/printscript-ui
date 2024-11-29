@@ -64,9 +64,12 @@ export class FantocheSnippetOperations implements SnippetOperations {
         try {
             const token = localStorage.getItem('token');
             const url = `${BACKEND_URL}/update/${id}`;
-            const res = await axios.put(url, updateSnippet, {
+            const res = await axios.put(url, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
+                },
+                params: {
+                    updateSnippet
                 }
             });
             return res.data;
