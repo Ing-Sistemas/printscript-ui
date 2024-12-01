@@ -18,7 +18,7 @@ describe('Add snippet tests', () => {
     const url = backendUrl + "/create"
     cy.intercept('POST', url, (req) => {
       req.reply((res) => {
-        req.headers = {'Authorization': `Bearer ${localStorage.getItem("authAccessToken")}`}
+        req.headers = {'Authorization': `Bearer ${localStorage.getItem("token")}`}
         expect(res.statusCode).to.eq(200);
       });
     }).as('postRequest');
@@ -40,8 +40,10 @@ describe('Add snippet tests', () => {
 
   it('Can add snippets via file', () => {
     cy.visit("/")
-    cy.intercept('POST', Cypress.env("BACKEND_URL") + "/create", (req) => {
-      req.headers = {'Authorization': `Bearer ${localStorage.getItem('authAccessToken')}`}
+    const backendUrl2 = Cypress.env("BACKEND_URL")
+    const url2 = backendUrl2 + "/create"
+    cy.intercept('POST', url2, (req) => {
+      req.headers = {'Authorization': `Bearer ${localStorage.getItem('token')}`}
       req.reply((res) => {
         expect(res.statusCode).to.eq(200);
       });
@@ -55,7 +57,7 @@ describe('Add snippet tests', () => {
 
 
     cy.intercept('GET', url, (req) => {
-      // req.headers = {'Authorization': `Bearer ${localStorage.getItem("authAccessToken")}`}
+      req.headers = {'Authorization': `Bearer ${localStorage.getItem("token")}`}
       req.reply((res) => {
         expect(res.statusCode).to.eq(200);
       });
@@ -66,7 +68,7 @@ describe('Add snippet tests', () => {
     cy.get('[data-testid="upload-file-input"').selectFile("cypress/fixtures/example_ps.ps", {force: true})
 
     cy.get('[data-testid="SaveIcon"]').click();
-
+    cy.wait(4000)
     cy.wait('@postRequest').its('response.statusCode').should('eq', 200);
   })
 })

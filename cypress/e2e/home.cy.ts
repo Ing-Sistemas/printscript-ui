@@ -32,7 +32,7 @@ describe('Home', () => {
     const snippetData: CreateSnippet = {
       name: "Test name",
       content: "println(1);",
-      language: "PrintScript",
+      language: `PrintScript`,
       extension: ".ps"
     }
 
@@ -43,7 +43,7 @@ describe('Home', () => {
     const url = backendUrl + "/get_all?page=0&pageSize=10&snippetName="
     console.log(url)
     cy.intercept('GET', url, (req) => {
-      req.headers = {'Authorization': `Bearer ${localStorage.getItem("authAccessToken")}`}
+      req.headers = {'Authorization': `Bearer ${localStorage.getItem("token")}`}
       req.reply((res) => {
         expect(res.statusCode).to.eq(200);
       });
@@ -64,7 +64,7 @@ describe('Home', () => {
     cy.get('#name').type(snippetData.name);
     cy.get('#demo-simple-select').click()
     cy.get('body').click();
-    cy.get(`[data-testid="menu-option-${snippetData.language}"]`).click({force: true})
+    cy.get(`[data-testid="menu-option-${snippetData.language}"]`).click({force: false})
 
     cy.get('[data-testid="add-snippet-code-editor"]').click({force: true});
     cy.get('[data-testid="add-snippet-code-editor"]').type(snippetData.content);
@@ -89,7 +89,7 @@ describe('Home', () => {
     const backendUrl = Cypress.env('BACKEND_URL').replace(':80', '')
     const url = backendUrl + "/get_all"
     cy.intercept('GET', url, (req) => {
-      req.headers = {'Authorization': `Bearer ${localStorage.getItem("authAccessToken")}`}
+      req.headers = {'Authorization': `Bearer ${localStorage.getItem("token")}`}
       req.reply((res) => {
         expect(res.statusCode).to.eq(200);
       });
