@@ -166,7 +166,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
         try {
             const token = localStorage.getItem('token');
             const url = `${BACKEND_URL}/test`;
-            const res = await axios.post(url, testCase, {
+            const res = await axios.put(url, testCase, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
