@@ -64,9 +64,12 @@ export class FantocheSnippetOperations implements SnippetOperations {
         try {
             const token = localStorage.getItem('token');
             const url = `${BACKEND_URL}/update/${id}`;
-            const res = await axios.put(url, updateSnippet, {
+            const res = await axios.put(url, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
+                },
+                params: {
+                    updateSnippet
                 }
             });
             return res.data;
@@ -134,6 +137,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
                     pageSize,
                 }
             });
+            // TODO voy a tener q mappear la info
             return res.data;
         } catch (e) {
              console.log("Error getting user friends", e);
@@ -163,7 +167,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
         try {
             const token = localStorage.getItem('token');
             const url = `${BACKEND_URL}/test`;
-            const res = await axios.post(url, testCase, {
+            const res = await axios.put(url, testCase, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
