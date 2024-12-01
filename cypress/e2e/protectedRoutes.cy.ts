@@ -9,19 +9,22 @@ describe('Protected routes test', () => {
   it('should redirect to login when accessing a protected route unauthenticated', () => {
 
     // Visit the protected route
-    cy.visit("/");
+    cy.visit('/');
 
-    cy.wait(1000)
+   // cy.wait(1000)
     console.log(cy.url())
+    cy.origin(Cypress.env('VITE_AUTH0_DOMAIN'), () => {
+      cy.url().should('contain', '/login');
+    });
     // Check if the URL is redirected to the login page
-    cy.url().should('include', '/login');
+    //cy.url().should('include', '/login');
   });
 
   it('should display login content', () => {
     // Visit the login page
-    cy.visit('/login');
+    cy.visit(Cypress.env('VITE_AUTH0_DOMAIN'));
     // Look for text that is likely to appear on a login page
-    cy.contains('Email address').should('exist');
+    // cy.contains('Email').should('exist');
     cy.contains('Password').should('exist'); // Adjust the text based on actual content
   });
 

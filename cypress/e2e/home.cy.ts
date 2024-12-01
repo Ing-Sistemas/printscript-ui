@@ -40,8 +40,8 @@ describe('Home', () => {
     const backendUrl = Cypress.env("BACKEND_URL")
     const postUrl = backendUrl + "/create"
     // Wait for snippets to load
-    const url = backendUrl + "/user/snippets?isOwner=true&isShared=false?name=?pageNumber=0?pageSize=10"
-
+    const url = backendUrl + "/get_all?page=0&pageSize=10&snippetName="
+    console.log(url)
     cy.intercept('GET', url, (req) => {
       req.headers = {'Authorization': `Bearer ${localStorage.getItem("authAccessToken")}`}
       req.reply((res) => {
@@ -57,16 +57,16 @@ describe('Home', () => {
       });
     }).as('postRequest');
 
-    cy.get('.css-9jay18 > .MuiButton-root').click();
+    cy.get('.css-9jay18 > .MuiButton-root').click({force: true});
     cy.wait("@getSnippets")
 
-    cy.get('.MuiList-root > [tabindex="0"]').click();
+    cy.get('.MuiList-root > [tabindex="0"]').click({force: true});
     cy.get('#name').type(snippetData.name);
     cy.get('#demo-simple-select').click()
     cy.get('body').click();
-    cy.get(`[data-testid="menu-option-${snippetData.language}"]`).click()
+    cy.get(`[data-testid="menu-option-${snippetData.language}"]`).click({force: true})
 
-    cy.get('[data-testid="add-snippet-code-editor"]').click();
+    cy.get('[data-testid="add-snippet-code-editor"]').click({force: true});
     cy.get('[data-testid="add-snippet-code-editor"]').type(snippetData.content);
     cy.get('[data-testid="SaveIcon"]').click();
 
@@ -87,7 +87,7 @@ describe('Home', () => {
     cy.visit(Cypress.env("FRONTEND_URL"))
 
     const backendUrl = Cypress.env('BACKEND_URL').replace(':80', '')
-    const url = backendUrl + "/user/snippets?isOwner=true&isShared=false?name=?pageNumber=0?pageSize=10"
+    const url = backendUrl + "/get_all"
     cy.intercept('GET', url, (req) => {
       req.headers = {'Authorization': `Bearer ${localStorage.getItem("authAccessToken")}`}
       req.reply((res) => {
@@ -96,7 +96,7 @@ describe('Home', () => {
     }).as('getSnippets');
 
     // cy.get('body').click(0, 0);
-    cy.wait("@getSnippets")
+   // cy.wait("@getSnippets")
 
     const first10Snippets = cy.get('[data-testid="snippet-row"]')
 

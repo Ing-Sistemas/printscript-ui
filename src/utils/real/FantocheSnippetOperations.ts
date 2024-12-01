@@ -66,9 +66,12 @@ export class FantocheSnippetOperations implements SnippetOperations {
     async updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
         try {
             const url = `${BACKEND_URL}/update/${id}`;
-            const res = await axios.put(url, updateSnippet, {
+            const res = await axios.put(url, {
                 headers: {
                     'Authorization': `Bearer ${await this.token}`,
+                },
+                params: {
+                    updateSnippet
                 }
             });
             return res.data;
@@ -99,17 +102,21 @@ export class FantocheSnippetOperations implements SnippetOperations {
     async listSnippetDescriptors(page: number, pageSize: number, snippetName?: string | undefined): Promise<PaginatedSnippets> {
         try {
             const url = `${BACKEND_URL}/get_all`;
+            const params = { page, pageSize, snippetName };
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${await this.token}`,
-                },
-                params: {
-                    snippetName,
-                    page,
-                    pageSize
-                }
-            })
-            return res.data;
+                    Authorization: `Bearer ${await this.token}`,
+                }, params
+            });
+
+            const data = res.data;
+            console.log(res.data.snippets[0])
+            return {
+                snippets: data.snippets, //hacer el map
+                page: data.pagination.page,
+                page_size: data.pagination.pageSize,
+                count: data.pagination.count
+            };
         } catch (e) {
             console.log("Error listing snippets", e);
             throw e;
@@ -129,6 +136,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
                     pageSize,
                 }
             });
+            // TODO voy a tener q mappear la info
             return res.data;
         } catch (e) {
              console.log("Error getting user friends", e);
@@ -142,7 +150,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/test/${snippetId}`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
 
@@ -153,17 +161,14 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
 
     }
-    async postTestCase(testCase: Partial<TestCase>, snippetId: string): Promise<TestCase> {
+    async postTestCase(testCase: Partial<TestCase>, sId: string): Promise<TestCase> {
         try {
             const url = `${BACKEND_URL}/test`;
-            const res = await axios.post(url, {
+            const res = await axios.put(url, testCase, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
-                params: {
-                    testCase,
-                    snippetId
-                }
+                params: { sId }
             });
             return res.data;
         } catch (e) {
@@ -177,7 +182,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/test/${id}`;
             await axios.delete(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 }
             });
             return "Test case removed successfully";
@@ -191,7 +196,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
             const url = `${BACKEND_URL}/test`;
             const res = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
                 params: {
                     testCase
@@ -227,15 +232,17 @@ export class FantocheSnippetOperations implements SnippetOperations {
             throw e;
         }
     }
+
     async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
         return this.modifyRule(newRules, 'format');
     }
-    async formatSnippet(snippet: string): Promise<string> {
+
+    async formatSnippet(snippet: string): Promise<string> { // TODO es el code del snippet
         try {
             const url = `${BACKEND_URL}/format/`;
             await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`,
+                    'Authorization': `Bearer ${await this.token}`,
                 },
                 params: {
                     snippet
