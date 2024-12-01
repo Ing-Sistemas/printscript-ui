@@ -66,13 +66,11 @@ export class FantocheSnippetOperations implements SnippetOperations {
     async updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet> {
         try {
             const url = `${BACKEND_URL}/update/${id}`;
-            const res = await axios.put(url, {
+            console.log("token is", await this.token)
+            const res = await axios.put(url, updateSnippet, {
                 headers: {
                     'Authorization': `Bearer ${await this.token}`,
                 },
-                params: {
-                    updateSnippet
-                }
             });
             return res.data;
         } catch (e) {
