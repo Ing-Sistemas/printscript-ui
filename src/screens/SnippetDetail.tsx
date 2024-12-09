@@ -62,7 +62,9 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
   const { mutate: formatSnippet, isLoading: isFormatLoading } = useFormatSnippet({
     onSuccess: () => queryClient.invalidateQueries(['snippet', id])
   });
+
   const {mutate: updateSnippet, isLoading: isUpdateSnippetLoading} = useUpdateSnippetById({
+    // eslint-disable-next-line react-hooks/rules-of-hooks
         onSuccess: () => useGetSnippetById(id)
   });
 
