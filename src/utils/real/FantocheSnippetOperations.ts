@@ -230,20 +230,23 @@ export class FantocheSnippetOperations implements SnippetOperations {
     }
 
     async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
-        return this.modifyRule(newRules, 'format');
+        return this.modifyRule(newRules, 'FORMAT');
     }
 
-    async formatSnippet(snippet: string): Promise<string> { // TODO es el code del snippet
+    async formatSnippet(snippetId: string): Promise<string> {
         try {
-            const url = `${BACKEND_URL}/format/`;
-            await axios.get(url, {
-                headers: {
-                    'Authorization': `Bearer ${await this.token}`,
-                },
-                params: {
-                    snippet
+            const url = `${BACKEND_URL}/format/${snippetId}`;
+
+            const res = await axios.post(
+                url,
+                {},
+                {
+                    headers: {
+                        'Authorization': `Bearer ${await this.token}`,
+                    },
                 }
-            });
+            );
+            console.log(res.data);
             return "Snippet formatted successfully";
         } catch (e) {
             console.log("Error formatting snippet", e);
@@ -253,7 +256,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
 
     // ------------------- LINT CASES -------------------
     async modifyLintingRule(newRules: Rule[]): Promise<Rule[]> {
-        return this.modifyRule(newRules, 'lint');
+        return this.modifyRule(newRules, 'LINT');
     }
     async getLintingRules(): Promise<Rule[]> {
         try {
@@ -270,15 +273,14 @@ export class FantocheSnippetOperations implements SnippetOperations {
         }
     }
 
-    private async modifyRule(newRules: Rule[], type: 'format' | 'lint'): Promise<Rule[]> {
+    private async modifyRule(newRules: Rule[], type: 'FORMAT' | 'LINT'): Promise<Rule[]> {
         try {
-            const url = `${BACKEND_URL}/${type}/`;
-            const res = await axios.post(url, {
+            const url = `${BACKEND_URL}/${type}`;
+            console.log(`URL ASDASDASD ${url}`);
+
+            const res = await axios.put(url, newRules, {
                 headers: {
                     'Authorization': `Bearer ${await this.token}`,
-                },
-                params: {
-                    newRules
                 }
             });
             return res.data;

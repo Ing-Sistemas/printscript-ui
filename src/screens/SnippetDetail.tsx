@@ -59,20 +59,18 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
 
   const {data: snippet, isLoading} = useGetSnippetById(id);
   const {mutate: shareSnippet, isLoading: loadingShare} = useShareSnippet()
-  const {mutate: formatSnippet, isLoading: isFormatLoading, data: formatSnippetData} = useFormatSnippet()
-  const {mutate: updateSnippet, isLoading: isUpdateSnippetLoading} = useUpdateSnippetById({onSuccess: () => queryClient.invalidateQueries(['snippet', id])})
+  const { mutate: formatSnippet, isLoading: isFormatLoading } = useFormatSnippet({
+    onSuccess: () => queryClient.invalidateQueries(['snippet', id])
+  });
+  const {mutate: updateSnippet, isLoading: isUpdateSnippetLoading} = useUpdateSnippetById({
+        onSuccess: () => useGetSnippetById(id)
+  });
 
   useEffect(() => {
     if (snippet) {
       setCode(snippet.content);
     }
   }, [snippet]);
-
-  useEffect(() => {
-    if (formatSnippetData) {
-      setCode(formatSnippetData)
-    }
-  }, [formatSnippetData])
 
 
   async function handleShareSnippet(userId: string) {
@@ -109,7 +107,7 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
               {/*</Tooltip>*/}
               {/* TODO: we can implement a live mode*/}
               <Tooltip title={"Format"}>
-                <IconButton onClick={() => formatSnippet(code)} disabled={isFormatLoading}>
+                <IconButton onClick={() => formatSnippet(id)} disabled={isFormatLoading}>
                   <ReadMoreIcon />
                 </IconButton>
               </Tooltip>

@@ -133,13 +133,13 @@ export const useModifyLintingRules = ({onSuccess}: { onSuccess: () => void }) =>
     );
 }
 
-export const useFormatSnippet = () => {
+export const useFormatSnippet = ({ onSuccess }: { onSuccess: () => void }) => {
     const snippetOperations = useSnippetOperations();
     return useMutation<string, Error, string>(
-        snippetContent => snippetOperations!.formatSnippet(snippetContent)
+        snippetId => snippetOperations!.formatSnippet(snippetId),
+        { onSuccess }
     );
 }
-
 export const useDeleteSnippet = ({onSuccess}: { onSuccess: () => void }) => {
     const snippetOperations = useSnippetOperations();
     return useMutation<string, Error, string>(
