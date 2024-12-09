@@ -133,8 +133,7 @@ export class FantocheSnippetOperations implements SnippetOperations {
                     pageSize,
                 }
             });
-            // TODO voy a tener q mappear la info
-            return res.data;
+            return Promise.resolve(res.data);
         } catch (e) {
              console.log("Error getting user friends", e);
              throw e;
