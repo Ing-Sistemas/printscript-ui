@@ -97,10 +97,10 @@ export const useRemoveTestCase = ({onSuccess}: { onSuccess: () => void }) => {
 
 export type TestCaseResult = "success" | "fail"
 
-export const useTestSnippet = () => {
+export const useTestSnippet = (sId: string) => {
     const snippetOperations = useSnippetOperations();
     return useMutation<TestCaseResult, Error, Partial<TestCase>>(
-        (tc) => snippetOperations!.testSnippet(tc)
+        (tc) => snippetOperations!.testSnippet(tc, sId)
     )
 }
 
