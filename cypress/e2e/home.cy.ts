@@ -95,8 +95,8 @@ describe('Home', () => {
       });
     }).as('getSnippets');
 
-    // cy.get('body').click(0, 0);
-   // cy.wait("@getSnippets")
+    cy.get('body').click(0, 0);
+    //cy.wait("@getSnippets")
 
     const first10Snippets = cy.get('[data-testid="snippet-row"]')
 

@@ -28,6 +28,7 @@ describe('Add snippet tests', () => {
   })
 
   it('Can share a snippet ', () => {
+    cy.wait(10000)
     cy.get('[aria-label="Share"]').click();
     cy.get('.css-1h51icj-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input').click();
     cy.get('.css-gdh49b-MuiAutocomplete-listbox .MuiAutocomplete-option').first().click();
@@ -35,16 +36,19 @@ describe('Add snippet tests', () => {
   })
 
   it('Can format snippets', function() {
+    cy.wait(10000)
     cy.get('[data-testid="ReadMoreIcon"] > path').click();
   });
 
   it('Can save snippets', function() {
+    cy.wait(10000)
     cy.get('.css-10egq61 > .MuiBox-root > div > .npm__react-simple-code-editor__textarea').click();
     cy.get('.css-10egq61 > .MuiBox-root > div > .npm__react-simple-code-editor__textarea').type("Some new line");
     cy.get('[data-testid="SaveIcon"] > path').click();
   });
 
   it('Can delete snippets', function() {
+    cy.wait(10000)
     cy.get('[data-testid="DeleteIcon"] > path').click();
   });
 })
