@@ -3,7 +3,7 @@ name: "Continuous Deployment"
 on:
     push:
         branches:
-        - main
+        - master
         - dev
 jobs:
   push_to_registry:
@@ -33,8 +33,9 @@ jobs:
         with:
             context: .
             push: true
+            platforms: linux/amd64,linux/arm64
             tags: |
-              ghcr.io/ing-sistemas/ui:latest
+              ghcr.io/ing-sistemas/ui:prod-latest
 
       - name: Push to github packages for dev
         id: docker_build_dev
@@ -43,5 +44,38 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/ing-sistemas/ui:dev
+            ghcr.io/ing-sistemas/ui:dev-latest
+
+      - name: Set up Prod SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        if: github.ref == 'refs/heads/master'
+        with:
+          ssh-private-key: ${{ secrets.PROD_KEY }}
+
+      - name: Deploy to Prod VM
+        if: github.ref == 'refs/heads/master'
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_PROD }} \
+          "cd ${{secrets.WORKDIR}} && \
+          docker compose stop ui && \
+          docker compose rm -f ui && \
+          docker compose pull ui && \
+          docker compose up -d ui"
+
+      - name: Set up Dev SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        if: github.ref == 'refs/heads/dev'
+        with:
+          ssh-private-key: ${{ secrets.DEV_KEY  }}
+
+      - name: Deploy to Dev VM
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_DEV }} \
+          "cd ${{secrets.WORKDIR}} && \
+          docker compose stop ui && \
+          docker compose rm -f ui && \
+          docker compose pull ui && \
+          docker compose up -d ui"

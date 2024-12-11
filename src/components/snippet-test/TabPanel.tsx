@@ -10,12 +10,13 @@ type TabPanelProps = {
     test?: TestCase;
     setTestCase: (test: Partial<TestCase>) => void;
     removeTestCase?: (testIndex: string) => void;
+    sId: string,
 }
 
-export const TabPanel = ({value, index, test: initialTest, setTestCase, removeTestCase}: TabPanelProps) => {
+export const TabPanel = ({value, index, test: initialTest, setTestCase, removeTestCase, sId}: TabPanelProps) => {
     const [testData, setTestData] = useState<Partial<TestCase> | undefined>(initialTest);
 
-    const {mutateAsync: testSnippet, data} = useTestSnippet();
+    const {mutateAsync: testSnippet, data} = useTestSnippet(sId);
 
 
     return (

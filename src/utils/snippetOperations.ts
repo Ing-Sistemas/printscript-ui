@@ -24,15 +24,15 @@ export interface SnippetOperations {
 
   getTestCases(snippetId: string): Promise<TestCase[]>
 
-  formatSnippet(snippet: string): Promise<string>
+  formatSnippet(snippetId: string): Promise<string>
 
-  postTestCase(testCase: Partial<TestCase>): Promise<TestCase>
+  postTestCase(testCase: Partial<TestCase>, sId: string): Promise<TestCase>
 
   removeTestCase(id: string): Promise<string>
 
   deleteSnippet(id: string): Promise<string>
 
-  testSnippet(testCase: Partial<TestCase>): Promise<TestCaseResult>
+  testSnippet(testCase: Partial<TestCase>, sId: string): Promise<TestCaseResult>
 
   getFileTypes(): Promise<FileType[]>
 

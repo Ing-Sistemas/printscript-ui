@@ -76,10 +76,10 @@ export const useGetTestCases = (snippetId: string) => {
 };
 
 
-export const usePostTestCase = () => {
+export const usePostTestCase = (sId: string) => {
     const snippetOperations = useSnippetOperations();
     return useMutation<TestCase, Error, Partial<TestCase>>(
-        (tc) => snippetOperations!.postTestCase(tc)
+        (tc) => snippetOperations!.postTestCase(tc, sId)
     );
 };
 
@@ -97,10 +97,10 @@ export const useRemoveTestCase = ({onSuccess}: { onSuccess: () => void }) => {
 
 export type TestCaseResult = "success" | "fail"
 
-export const useTestSnippet = () => {
+export const useTestSnippet = (sId: string) => {
     const snippetOperations = useSnippetOperations();
     return useMutation<TestCaseResult, Error, Partial<TestCase>>(
-        (tc) => snippetOperations!.testSnippet(tc)
+        (tc) => snippetOperations!.testSnippet(tc, sId)
     )
 }
 
@@ -133,13 +133,13 @@ export const useModifyLintingRules = ({onSuccess}: { onSuccess: () => void }) =>
     );
 }
 
-export const useFormatSnippet = () => {
+export const useFormatSnippet = ({ onSuccess }: { onSuccess: () => void }) => {
     const snippetOperations = useSnippetOperations();
     return useMutation<string, Error, string>(
-        snippetContent => snippetOperations!.formatSnippet(snippetContent)
+        snippetId => snippetOperations!.formatSnippet(snippetId),
+        { onSuccess }
     );
 }
-
 export const useDeleteSnippet = ({onSuccess}: { onSuccess: () => void }) => {
     const snippetOperations = useSnippetOperations();
     return useMutation<string, Error, string>(

@@ -16,7 +16,7 @@ export const TestSnippetModal = ({open, onClose, snippetId}: TestSnippetModalPro
     const [value, setValue] = useState(0);
 
     const {data: testCases} = useGetTestCases(snippetId);
-    const {mutateAsync: postTestCase} = usePostTestCase();
+    const {mutateAsync: postTestCase} = usePostTestCase(snippetId);
     const {mutateAsync: removeTestCase} = useRemoveTestCase({
         onSuccess: () => queryClient.invalidateQueries('testCases')
     });
@@ -49,10 +49,12 @@ export const TestSnippetModal = ({open, onClose, snippetId}: TestSnippetModalPro
                     <TabPanel index={index} value={value} test={testCase}
                               setTestCase={(tc) => postTestCase(tc)}
                               removeTestCase={(i) => removeTestCase(i)}
+                              sId = {snippetId}
                     />
                 ))}
                 <TabPanel index={(testCases?.length ?? 0) + 1} value={value}
                           setTestCase={(tc) => postTestCase(tc)}
+                          sId = {snippetId}
                 />
             </Box>
         </ModalWrapper>
